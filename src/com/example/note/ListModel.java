@@ -18,11 +18,11 @@ public class ListModel {
 		Log.d("wangbin","查看创建mModels");
 		this.context = context;
 		mModels = new ArrayList<RecordModel>();
-		for(int i=0; i<10; i++){
-			RecordModel model = new RecordModel(context);
-			model.setTitle("样本" + (i+1));
-			mModels.add(model);
-		}
+//		for(int i=0; i<10; i++){
+//			RecordModel model = new RecordModel(context);
+//			model.setTitle("样本" + (i+1));
+//			mModels.add(model);
+//		}
 	}
 	
 	public static ListModel get(Context context) {

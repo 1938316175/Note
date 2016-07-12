@@ -24,7 +24,7 @@ public class NoteListActivity extends Activity{
 	
 	private ArrayList<RecordModel> mModels;
 	private Context context = NoteListActivity.this;
-	private static final String NOTE_ID = "JUEDUIJIMI";
+	public static final String NOTE_ID = "com.example.note.id";
 	
 	private ListView listView;
 	private ModelAdapter adapter;
@@ -105,6 +105,8 @@ public class NoteListActivity extends Activity{
         	RecordModel model = new RecordModel(context);
         	ListModel.get(context).addModel(model);
         	Intent intent = new Intent(context, RecordActivity.class);
+        	intent.putExtra(NOTE_ID, model.getId());
+     //   	intent.putExtra("w", "2");
 			startActivity(intent);
             return true;
         }

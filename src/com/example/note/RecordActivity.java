@@ -3,10 +3,12 @@ package com.example.note;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import android.R.integer;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -33,10 +35,31 @@ public class RecordActivity extends Activity {
 	private ArrayList<RecordModel> models;
 	private Context context = RecordActivity.this;
 	
+	private static final int FUNCTION_IFDIALOG = 1;
+	private static final int DIALOG_YES = 2;
+	private static final int DIALOG_NO = 3;
+	private EditText editText_dialog;
+	
 	private Handler handler = new Handler(){
 		public void handleMessage(Message message) {
-			if(message.what == 1){
+			switch (message.what) {
+			case 1:
 				ifDialog();
+				break;
+			case 2:
+				Log.d("wangbin", "未设置标题");
+				model.setTitle("未设置标题");
+				Intent intent1 = new Intent(context, NoteListActivity.class);
+				startActivity(intent1);
+				break;
+			case 3:
+				Log.d("wangbin", "设置标题");
+				model.setTitle(editText_dialog.getText().toString());
+				Intent intent2 = new Intent(context, NoteListActivity.class);
+				startActivity(intent2);
+				break;
+			default:
+				break;
 			}
 		}
 	};
@@ -55,6 +78,8 @@ public class RecordActivity extends Activity {
         finish_button.setOnClickListener(listener);
         
         UUID modelId = (UUID)RecordActivity.this.getIntent().getSerializableExtra(NOTE_ID);
+    //    String i = (String)RecordActivity.this.getIntent().getSerializableExtra("w");
+     //   Log.d("wangbin", i);
         model = ListModel.get(context).getModel(modelId);
         
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){
@@ -112,13 +137,53 @@ public class RecordActivity extends Activity {
 	}
 	
 	private void ifDialog() {
-		Log.d("wangbin", "这里应该提示没有设置标题");
-		AlertDialog.Builder builder  = new Builder(RecordActivity.this);
-		builder.setTitle("提示" ) ;
-		builder.setMessage("未设置标题，是否不设置退出？" ) ;
-		builder.setPositiveButton("是" ,  null );
-		builder.setNegativeButton("否", null);
-		builder.show();
+		
+		if(model.getTitle() == ""){
+			
+			Log.d("wangbin", "这里应该提示没有设置标题");
+			AlertDialog.Builder builder  = new Builder(RecordActivity.this);
+			builder.setTitle("提示" ) ;
+			builder.setMessage("未设置标题，是否不设置退出？" ) ;
+			builder.setPositiveButton("是" ,  new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+				//	Log.d("wangbin", "设置无标题");
+					Message message = new Message();
+					message.what = 2;
+					handler.sendMessage(message);
+					
+				}
+			} );
+			builder.setNegativeButton("设置", new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					Log.d("wangbin", "这里应该再跳出一个对话框的");
+					AlertDialog.Builder builder1  = new Builder(RecordActivity.this);
+					builder1.setTitle("请输入标题：" ) ;
+					editText_dialog = new EditText(context);
+					builder1.setView(editText_dialog);
+					builder1.setPositiveButton("完成" ,  new DialogInterface.OnClickListener() {
+						
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							Message message = new Message();
+							message.what = 3;
+							handler.sendMessage(message);
+						}
+					} );
+					builder1.show();
+				}
+			});
+			builder.show();
+				
+		} 
+		else {
+			Intent intent = new Intent(context, NoteListActivity.class);
+			startActivity(intent);
+		}
+		
 	}
 
 	
