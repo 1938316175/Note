@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+       
+    <TextView
+        android:id="@+id/list_time_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_alignParentRight="true"
+        android:padding="4dp"
+        android:text="这里显示时间" />
+    
+    <TextView
+        android:id="@+id/list_title_text"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_toLeftOf="@id/list_time_text"
+	    android:paddingLeft="4dp"
+	    android:paddingRight="4dp"
+	    android:text="这里显示标题"
+	    android:textStyle="bold" />
+    
+    <TextView
+        android:id="@+id/list_string_text"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_below="@id/list_title_text"
+	    android:layout_toLeftOf="@id/list_time_text"
+	    android:paddingTop="4dp"
+	    android:paddingLeft="4dp"
+	    android:paddingRight="4dp"
+	    android:text="这里显示缩略" />
+    
+
+</RelativeLayout>
