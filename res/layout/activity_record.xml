@@ -38,13 +38,15 @@
             android:layout_weight="1"
             android:text="取消" />
 
-        <Button
-            android:id="@+id/more_button"
+        <Spinner
+            android:id="@+id/spinner"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="更多" />
+            android:layout_marginBottom="35dp"
+            android:layout_marginLeft="10dp"
+            android:entries="@array/languages"/>
 
         <Button
             android:id="@+id/finish_button"

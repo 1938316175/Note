@@ -3,7 +3,7 @@ package com.example.note;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import android.R.integer;
+import android.R.string;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -18,8 +18,11 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 
@@ -27,7 +30,7 @@ public class RecordActivity extends Activity {
 
 	private EditText editText;
 	private Button cancel_button;
-	private Button more_button;
+	private Spinner more_spinner;
 	private Button finish_button;
 	
 	public static final String NOTE_ID = "com.example.note.id";
@@ -38,6 +41,8 @@ public class RecordActivity extends Activity {
 	private static final int FUNCTION_IFDIALOG = 1;
 	private static final int DIALOG_YES = 2;
 	private static final int DIALOG_NO = 3;
+	private static final int DIALOG_TITLE = 4;
+	private static final int DIALOG_TIME = 5;
 	private EditText editText_dialog;
 	
 	private Handler handler = new Handler(){
@@ -58,6 +63,27 @@ public class RecordActivity extends Activity {
 				Intent intent2 = new Intent(context, NoteListActivity.class);
 				startActivity(intent2);
 				break;
+				
+			case 4:
+				Log.d("wangbin", "Spinner设置标题");
+				final EditText editText_title_dialog;
+				AlertDialog.Builder builder  = new Builder(RecordActivity.this);
+				builder.setTitle("请输入标题：" ) ;
+				editText_title_dialog = new EditText(context);
+				builder.setView(editText_title_dialog);
+				builder.setPositiveButton("确认" ,  new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						model.setTitle(editText_title_dialog.getText().toString());
+						Toast.makeText(context, "设置标题成功。", 1000);
+					}
+				} );
+				builder.show();
+				break;
+			case 5:
+				Log.d("wangbin", "Spinner设置时间");
+				break;
 			default:
 				break;
 			}
@@ -71,11 +97,38 @@ public class RecordActivity extends Activity {
         
         editText = (EditText)findViewById(R.id.editText);
         cancel_button = (Button)findViewById(R.id.cancel_button);
-        more_button = (Button)findViewById(R.id.more_button);
         finish_button = (Button)findViewById(R.id.finish_button);
         cancel_button.setOnClickListener(listener);
-        more_button.setOnClickListener(listener);
         finish_button.setOnClickListener(listener);
+        more_spinner = (Spinner)findViewById(R.id.spinner);
+        more_spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, 
+                    int pos, long id) {
+            	Log.d("wangbin", "点击了Spinner");
+            	switch (pos) {
+				case 0:
+					Message message = new Message();
+					message.what = DIALOG_TITLE;
+					handler.sendMessage(message);
+					break;
+				case 1:
+					Message message1 = new Message();
+					message1.what = DIALOG_TIME;
+					handler.sendMessage(message1);
+					break;
+				case 2:
+					Toast.makeText(context, "更多设置敬请期待！", 1500);
+					break;
+				default:
+					break;
+				}
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Another interface callback
+            }
+        });
         
         UUID modelId = (UUID)RecordActivity.this.getIntent().getSerializableExtra(NOTE_ID);
     //    String i = (String)RecordActivity.this.getIntent().getSerializableExtra("w");
@@ -87,6 +140,8 @@ public class RecordActivity extends Activity {
         }
     }
     
+    
+    
     OnClickListener listener = new OnClickListener() {
 		
 		@Override
@@ -95,10 +150,6 @@ public class RecordActivity extends Activity {
 			switch (v.getId()) {
 			case R.id.cancel_button:
 				
-				break;
-				
-			case R.id.more_button:
-					Toast.makeText(RecordActivity.this, "more!!!!", Toast.LENGTH_SHORT).show();
 				break;
 							
 			case R.id.finish_button:
